@@ -1,4 +1,5 @@
 # Import Libraries
+
 import streamlit as st
 import tensorflow as tf
 import numpy as np
@@ -9,11 +10,10 @@ from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # Branding 
 BRAND_NAME = "SlideLab AI"
-BRAND_COLOR = "#0077B6"       # primary color
-ACCENT_COLOR = "#90EE90"      # secondary color
-BG_WHITE = "#FFFFFF"          # white background
-TEXT_DARK = "#111111"         # dark text for readability
-TEXT_MUTED = "#4B5563"        # muted gray text
+BRAND_COLOR = "#0077B6"       
+ACCENT_COLOR = "#90EE90"
+BG_GRAY = "#F6F8FA"
+TEXT_MUTED = "#6B7280"
 IMAGE_DISPLAY_WIDTH = 500
 IMG_SIZE = 180
 
@@ -28,18 +28,12 @@ st.set_page_config(
 st.markdown(
     f"""
     <style>
-    /* Global text color */
-    html, body, .stApp, div, p, span, label, h1, h2, h3, h4, h5, h6 {{
-        color: {TEXT_DARK} !important;
-        background-color: {BG_WHITE};
-    }}
-
     /* Page background */
     .stApp {{
-        background-color: {BG_WHITE};
+        background-color: {BG_GRAY};
     }}
 
-    /* Header Title */
+    /* Header - enforce brand color */
     .brand-title {{
         color: {BRAND_COLOR} !important;
         font-size:38px !important;
@@ -49,8 +43,6 @@ st.markdown(
         line-height: 1.0;
         text-align: left;
     }}
-
-    /* Subtitle */
     .brand-sub {{
         color: {TEXT_MUTED} !important;
         font-size:14px;
@@ -58,40 +50,38 @@ st.markdown(
         margin-bottom:12px;
     }}
 
-    /* Cards */
+    /* Card style */
     .card {{
-        background: {BG_WHITE};
+        background: white;
         border-radius: 10px;
         padding: 14px;
         box-shadow: 0 1px 4px rgba(16,24,40,0.06);
-        border: 1px solid rgba(16,24,40,0.1);
+        border: 1px solid rgba(16,24,40,0.04);
     }}
 
-    /* Debug cards */
+    /* Debug small cards */
     .debug-card {{
-        background: #F3F4F6;
+        background: linear-gradient(180deg,#ffffff,#fbfcff);
         border-radius: 8px;
         padding: 10px;
         text-align: center;
-        border: 1px solid rgba(16,24,40,0.1);
-        color: {TEXT_DARK} !important;
+        border: 1px solid rgba(0,0,0,0.04);
     }}
 
-    /* Footer text */
+    /* Footer */
     .footer {{
-        color: {TEXT_MUTED};
+        color: #9CA3AF;
         font-size:12px;
         padding-top:10px;
         padding-bottom:30px;
     }}
 
-    /* Sidebar text */
-    section[data-testid="stSidebar"] div, section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] span {{
-        color: {TEXT_DARK} !important;
-        background-color: {BG_WHITE} !important;
+    /* Make sure markdown h1 elements with brand-title class keep color */
+    h1.brand-title {{
+        color: {BRAND_COLOR} !important;
     }}
 
-    /* Hide Streamlit default menu */
+    /* Hide Streamlit default menu (optional) */
     #MainMenu {{ visibility: hidden; }}
     footer {{ visibility: hidden; }}
     </style>
@@ -131,9 +121,11 @@ with st.sidebar:
 @st.cache_resource
 def load_model(path: str):
     try:
+        # try loading model using keras load_model
         model = tf.keras.models.load_model(path)
         return model
     except Exception as e:
+        # show a friendly message, return None
         st.error(f" Model load failed: {e}")
         return None
 
@@ -146,11 +138,13 @@ def preprocess_image(uploaded_file, show_debug: bool = False):
     img = tf.image.resize(img, (IMG_SIZE, IMG_SIZE))
     img = tf.cast(img, tf.float32)
 
+    # manual normalization & standard preprocess
     img_manual = (img / 127.5) - 1.0
-    img_pre = preprocess_input(img)
+    img_pre = preprocess_input(img)  # EfficientNet preprocessing usually [-1, +1]
     img_pre = tf.expand_dims(img_pre, 0)
 
     if show_debug:
+        # show horizontal debug cards
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown('<div class="debug-card">', unsafe_allow_html=True)
@@ -191,7 +185,7 @@ st.markdown(
           <div style="font-weight:700;color:{BRAND_COLOR}; margin-top:6px;">
             {"Loaded" if model is not None else "Not loaded"}
           </div>
-          <div style="font-size:12px;color:{TEXT_MUTED};margin-top:8px;">Updated: {datetime.datetime.now().strftime("%Y-%m-%d")}</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:8px;">Updated: {datetime.datetime.now().strftime("%Y-%m-%d")}</div>
         </div>
       </div>
     </div>
@@ -202,16 +196,17 @@ st.markdown(
 # File uploader & main area
 uploaded_file = st.file_uploader("Upload a blood-smear image (jpg, png)", type=["jpg", "jpeg", "png"], accept_multiple_files=False)
 
+# If no file, show example card and instructions
 if uploaded_file is None:
     st.markdown(
         """
         <div class="card">
             <h3 style="margin-top:0;">Get started</h3>
-            <p>
+            <p style="color:#374151;">
                 Upload a crop of a blood-smear slide (single-cell or small patch). The app processes the image and
                 returns the predicted label and confidence. Use the debug toggle in the sidebar to inspect preprocessing ranges.
             </p>
-            <ul>
+            <ul style="color:#374151;">
                 <li>Best crop size: at least 180×180 pixels</li>
                 <li>Prefer clear, focused Giemsa-stained images</li>
                 <li>Model: EfficientNetB0 (trained for parasitized vs uninfected)</li>
@@ -220,18 +215,21 @@ if uploaded_file is None:
         """,
         unsafe_allow_html=True,
     )
-    st.write("")
+    st.write("")  # spacing
 else:
+    # ensure model is loaded
     if model is None:
         st.error("Model not loaded. Please check the model path or server logs.")
         st.stop()
 
+    # preprocess (show debug only if checkbox enabled)
     try:
         img_tensor, display_img = preprocess_image(uploaded_file, show_debug=debug_mode)
     except Exception as e:
         st.error(f"Preprocessing error: {e}")
         st.stop()
 
+    # Prediction with spinner
     with st.spinner("Analyzing slide with SlideLab AI..."):
         try:
             raw_preds = model.predict(img_tensor)
@@ -239,7 +237,9 @@ else:
             st.error(f"Prediction failed: {e}")
             st.stop()
 
+    # Interpret various output shapes (softmax vs sigmoid)
     preds_arr = np.asarray(raw_preds)
+    # show raw debug if debug mode
     if debug_mode:
         st.markdown("<div class='card'><b>Raw model output</b></div>", unsafe_allow_html=True)
         st.write(preds_arr)
@@ -268,11 +268,15 @@ else:
     predicted_label = CLASS_NAMES[top_index]
     confidence = float(preds_list[top_index] * 100.0)
 
+    # Results layout
     st.markdown('<div class="card">', unsafe_allow_html=True)
     colA, colB = st.columns([1, 1])
 
     with colA:
+        # image preview on left
         st.image(display_img, caption="Uploaded Cell Image", width=IMAGE_DISPLAY_WIDTH, use_column_width=False)
+
+        # quick metadata
         st.write("")
         st.write("**Prediction**")
         st.markdown(f"<div style='font-size:18px; font-weight:700; color:{BRAND_COLOR};'>{predicted_label.upper()}</div>", unsafe_allow_html=True)
@@ -280,22 +284,24 @@ else:
         st.progress(min(max(float(confidence) / 100.0, 0.0), 1.0))
 
     with colB:
+        # probabilities and action area on right
         st.subheader("Prediction details")
         st.write("Raw probabilities (class → value):")
         st.json({CLASS_NAMES[i]: preds_list[i] for i in range(len(preds_list))})
 
-        st.write("")
+        st.write("")  # spacing
         st.markdown("### Model information")
         st.write(f"**Model path:** `{MODEL_PATH}`")
         st.write("**Architecture:** EfficientNetB0 (expected)")
         st.write(f"**Input size:** {IMG_SIZE} × {IMG_SIZE}")
         st.write(f"**Inferred at:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-        st.write("")
+        st.write("")  # spacing
         st.markdown("### Actions")
         col_btn1, col_btn2 = st.columns([1, 1])
         with col_btn1:
             if st.button("Download result summary"):
+                # create a small result text and allow download
                 result_txt = (
                     f"SlideLab AI result\n"
                     f"Predicted: {predicted_label}\n"
@@ -304,8 +310,8 @@ else:
                 )
                 st.download_button("Download .txt", result_txt, file_name="slidelab_result.txt")
         with col_btn2:
-            st.write("")
-            st.write("")
+            st.write("")  # placeholder for spacing
+            st.write("") 
             st.markdown(f"<small style='color:{TEXT_MUTED}'>Model ready for inference.</small>", unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -315,7 +321,7 @@ st.markdown(
     f"""
     <div class="card" style="margin-top:16px;">
       <strong>About {BRAND_NAME}</strong>
-      <p>
+      <p style="color:#374151;">
         SlideLab AI provides rapid, AI-powered microscopy review for blood-smear slides. Built initially for malaria detection,
         the system is designed to scale to other blood-slide NTDs such as filariasis and loiasis. This submission demonstrates
         clinical-grade model architecture, careful preprocessing, and a user-friendly interface suitable for field and lab use.
