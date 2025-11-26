@@ -201,7 +201,7 @@ if uploaded_file is None:
     st.markdown(
         """
         <div class="card">
-            <h3 style="margin-top:0;color:{TEXT_MUTED}">Get started</h3>
+            <h3 style="margin-top:0;color: #374151;">Get started</h3>
             <p style="color:#374151;">
                 Upload a crop of a blood-smear slide (single-cell or small patch). The app processes the image and
                 returns the predicted label and confidence. Use the debug toggle in the sidebar to inspect preprocessing ranges.
