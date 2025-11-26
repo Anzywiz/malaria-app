@@ -90,7 +90,7 @@ st.markdown(
 )
 
 # Constants & Model path
-MODEL_PATH = r"C:\Users\USER\Documents\Health_Tech_Initiative\finalfinal_effnetb0_model.h5"
+MODEL_PATH = "Malaria_Cell_Classification_Model.h5"
 CLASS_NAMES = ["parasitized", "uninfected"]
 
 # Sidebar - Info + options
