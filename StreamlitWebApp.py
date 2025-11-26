@@ -220,7 +220,7 @@ else:
     with colA:
         # Image preview
         st.image(display_img, caption="Uploaded Cell Image", width=IMAGE_DISPLAY_WIDTH)
-        st.write("")
+        st.write(" ")
         st.write("**Prediction**")
         st.markdown(f"<div style='font-size:18px; font-weight:700; color:{BRAND_COLOR};'>{predicted_label.upper()}</div>", unsafe_allow_html=True)
         st.write(f"Confidence: **{confidence:.2f}%**")
