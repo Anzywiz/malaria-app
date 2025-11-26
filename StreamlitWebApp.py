@@ -11,11 +11,11 @@ from tensorflow.keras.applications.efficientnet import preprocess_input
 # Branding
 
 BRAND_NAME = "SlideLab AI"
-BRAND_COLOR = "#0077B6"       # Blue accent
-ACCENT_COLOR = "#90EE90"      # Green highlight
-BG_COLOR = "#F5F5F5"          # Optimized light background
-TEXT_COLOR = "#111111"         # Dark text for readability
-TEXT_MUTED = "#6B7280"         # Muted gray
+BRAND_COLOR = "#0077B6"
+ACCENT_COLOR = "#90EE90"
+BG_COLOR = "#F5F5F5"
+TEXT_COLOR = "#111111"
+TEXT_MUTED = "#6B7280"
 IMAGE_DISPLAY_WIDTH = 500
 IMG_SIZE = 180
 
@@ -85,8 +85,8 @@ CLASS_NAMES = ["parasitized", "uninfected"]
 # Sidebar - Info + options
 
 with st.sidebar:
-    st.markdown(f"# {BRAND_NAME}")
-    st.write(
+st.markdown(f"# {BRAND_NAME}")
+st.write(
 "AI-assisted microscopy for blood-smear diagnostics — built for malaria now, "
 "designed to scale to other NTDs (filariasis, loiasis, etc.)."
 )
@@ -105,22 +105,22 @@ st.write("Lead: Micheal Adeniyi")
 st.write("Contact: [oluwafemiadeniyi772@gmail.com](mailto:oluwafemiadeniyi772@gmail.com)")
 st.caption("Tip: For best results upload clear 180×180+ crop of a single cell region.")
 
-# Utility: load model (cached)
+# Load model
 
 @st.cache_resource
 def load_model(path: str):
-    try:
-    model = tf.keras.models.load_model(path)
-    return model
-    except Exception as e:
+try:
+model = tf.keras.models.load_model(path)
+return model
+except Exception as e:
 st.error(f" Model load failed: {e}")
-    return None
+return None
 
 model = load_model(MODEL_PATH)
 
-# Preprocess function
+# Preprocess image
 
-def preprocess_image(uploaded_file, show_debug: bool = False):
+def preprocess_image(uploaded_file, show_debug=False):
 display_img = Image.open(uploaded_file).convert("RGB")
 img = tf.keras.utils.img_to_array(display_img)
 img = tf.image.resize(img, (IMG_SIZE, IMG_SIZE))
@@ -158,7 +158,7 @@ if show_debug:
 return img_pre, display_img
 ```
 
-# Header / Hero
+# Header
 
 st.markdown(
 f""" <div class="card" style="margin-bottom:14px;"> <div style="display:flex; align-items:center; gap:18px;"> <div style="flex:1;"> <h1 class="brand-title">🔬 {BRAND_NAME}</h1> <div class="brand-sub">NTD Vision — AI-assisted slide microscopy for malaria & beyond</div> </div> <div style="text-align:right;"> <div style="font-size:13px;color:{TEXT_MUTED}">Model status</div> <div style="font-weight:700;color:{BRAND_COLOR}; margin-top:6px;">
@@ -169,21 +169,19 @@ unsafe_allow_html=True,
 
 # File uploader
 
-uploaded_file = st.file_uploader("Upload a blood-smear image (jpg, png)", type=["jpg", "jpeg", "png"], accept_multiple_files=False)
+uploaded_file = st.file_uploader("Upload a blood-smear image (jpg, png)", type=["jpg","jpeg","png"])
 
 # Main content
 
 if uploaded_file is None:
 st.markdown(
-f""" <div class="card"> <h3 style="margin-top:0;">Get started</h3> <p>
-Upload a crop of a blood-smear slide (single-cell or small patch). The app processes the image and
-returns the predicted label and confidence. Use the debug toggle in the sidebar to inspect preprocessing ranges. </p> </div>
+f""" <div class="card"> <h3>Get started</h3> <p>Upload a blood-smear crop (180×180+) to see AI predictions.</p> </div>
 """,
 unsafe_allow_html=True,
 )
 else:
 if model is None:
-st.error("Model not loaded. Please check the model path or server logs.")
+st.error("Model not loaded. Check path.")
 st.stop()
 
 ```
@@ -192,7 +190,7 @@ img_tensor, display_img = preprocess_image(uploaded_file, show_debug=debug_mode)
 with st.spinner("Analyzing slide with SlideLab AI..."):
     raw_preds = model.predict(img_tensor)
 
-# Process predictions
+# Process prediction
 preds_arr = np.asarray(raw_preds)
 if preds_arr.ndim == 2 and preds_arr.shape[1] == 2:
     probs = preds_arr[0].astype(float).tolist()
@@ -203,24 +201,24 @@ elif preds_arr.size == 1:
     probs = [1.0 - p, p]
 else:
     flat = preds_arr.flatten()
-    probs = flat[:2].astype(float).tolist() if flat.size >= 2 else [0.5, 0.5]
+    probs = flat[:2].astype(float).tolist() if flat.size>=2 else [0.5,0.5]
 
 top_index = int(np.argmax(probs))
 predicted_label = CLASS_NAMES[top_index]
-confidence = float(probs[top_index] * 100.0)
+confidence = float(probs[top_index]*100.0)
 
-# Display results
+# Display
 st.markdown('<div class="card">', unsafe_allow_html=True)
-colA, colB = st.columns([1, 1])
+colA, colB = st.columns([1,1])
 with colA:
     st.image(display_img, caption="Uploaded Cell Image", width=IMAGE_DISPLAY_WIDTH)
 with colB:
     st.write("**Prediction**")
     st.markdown(f"<div style='font-size:18px; font-weight:700; color:{BRAND_COLOR};'>{predicted_label.upper()}</div>", unsafe_allow_html=True)
     st.write(f"Confidence: **{confidence:.2f}%**")
-    st.progress(min(max(confidence / 100.0, 0.0), 1.0))
+    st.progress(min(max(confidence/100.0,0.0),1.0))
 
-    # Download prediction summary
+    # Download summary
     summary_text = f"Prediction Summary:\nLabel: {predicted_label}\nConfidence: {confidence:.2f}%\nUploaded: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     st.download_button("Download Summary", data=summary_text, file_name="prediction_summary.txt", mime="text/plain")
 ```
