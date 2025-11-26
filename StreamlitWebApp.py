@@ -202,7 +202,7 @@ if uploaded_file is None:
         """
         <div class="card">
             <h3 style="margin-top:0;">Get started</h3>
-            <p style="color:#374151;">
+            <p style="color:{TEXT_MUTED};">
                 Upload a crop of a blood-smear slide (single-cell or small patch). The app processes the image and
                 returns the predicted label and confidence. Use the debug toggle in the sidebar to inspect preprocessing ranges.
             </p>
