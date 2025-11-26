@@ -85,8 +85,8 @@ CLASS_NAMES = ["parasitized", "uninfected"]
 # Sidebar - Info + options
 
 with st.sidebar:
-st.markdown(f"# {BRAND_NAME}")
-st.write(
+    st.markdown(f"# {BRAND_NAME}")
+    st.write(
 "AI-assisted microscopy for blood-smear diagnostics — built for malaria now, "
 "designed to scale to other NTDs (filariasis, loiasis, etc.)."
 )
