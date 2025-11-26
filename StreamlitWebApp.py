@@ -74,16 +74,15 @@ def preprocess_image(uploaded_file):
 # Load model (cached)
 
 @st.cache_resource
-def load_model():
+def load_model_local(path):
     try:
-        model = tf.keras.models.load_model(MODEL_PATH)
+        model = tf.keras.models.load_model(path)
         return model
     except Exception as e:
-        # show error and return None
-        st.error(f" Model loading failed: {e}")
+        st.error(f"❌ Model load failed: {e}")
         return None
 
-model = load_model()
+model = load_model_local(MODEL_PATH)
 
 
 # Header
