@@ -19,7 +19,7 @@ st.set_page_config(
 
 # Constants
 
-MODEL_PATH = r"C:\Users\USER\Documents\Health_Tech_Initiative\finalfinal_effnetb0_model.h5"
+MODEL_PATH = "https://github.com/OfemiAdeniyi/malaria-app/blob/master/Malaria_Cell_Classification_Model.h5"
 CLASS_NAMES = ["parasitized", "uninfected"]
 IMG_SIZE = 180
 IMAGE_DISPLAY_WIDTH = 250 
