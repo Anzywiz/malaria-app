@@ -101,26 +101,28 @@ CLASS_NAMES = ["parasitized", "uninfected"]
 
 # Sidebar - Info + options
 
+# Sidebar - Info + options
 with st.sidebar:
-st.markdown(f"# {BRAND_NAME}")
-st.write(
-"AI-assisted microscopy for blood-smear diagnostics — built for malaria now, "
-"designed to scale to other NTDs (filariasis, loiasis, etc.)."
-)
-st.divider()
-st.markdown("### How to use")
-st.write(
-"1. Upload a stained blood-smear image (jpg/png).\n"
-"2. Wait for the model to analyze the slide.\n"
-"3. View prediction, confidence, and model info."
-)
-st.divider()
-debug_mode = st.checkbox("Show preprocessing debug", value=False)
-st.markdown("### Project")
-st.write("SlideLab AI — NTD Vision (Hackathon submission)")
-st.write("Lead: Micheal Adeniyi")
-st.write("Contact: [oluwafemiadeniyi772@gmail.com](mailto:oluwafemiadeniyi772@gmail.com)")
-st.caption("Tip: For best results upload clear 180×180+ crop of a single cell region.")
+    st.markdown(f"# {BRAND_NAME}")
+    st.write(
+        "AI-assisted microscopy for blood-smear diagnostics — built for malaria now, "
+        "designed to scale to other NTDs (filariasis, loiasis, etc.)."
+    )
+    st.divider()
+    st.markdown("### How to use")
+    st.write(
+        "1. Upload a stained blood-smear image (jpg/png).\n"
+        "2. Wait for the model to analyze the slide.\n"
+        "3. View prediction, confidence, and model info."
+    )
+    st.divider()
+    debug_mode = st.checkbox("Show preprocessing debug", value=False)
+    st.markdown("### Project")
+    st.write("SlideLab AI — NTD Vision (Hackathon submission)")
+    st.write("Lead: Micheal Adeniyi")
+    st.write("Contact: oluwafemiadeniyi772@gmail.com")
+    st.caption("Tip: For best results upload clear 180×180+ crop of a single cell region.")
+
 
 # Load model
 
