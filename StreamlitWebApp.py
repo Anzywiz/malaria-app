@@ -128,12 +128,12 @@ with st.sidebar:
 
 @st.cache_resource
 def load_model(path: str):
-try:
-model = tf.keras.models.load_model(path)
-return model
-except Exception as e:
-st.error(f"Model load failed: {e}")
-return None
+    try:
+        model = tf.keras.models.load_model(path)
+        return model
+    except Exception as e:
+        st.error(f"Model load failed: {e}")
+        return None
 
 model = load_model(MODEL_PATH)
 
