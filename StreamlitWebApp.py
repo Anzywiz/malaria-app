@@ -139,42 +139,46 @@ model = load_model(MODEL_PATH)
 
 # Preprocess image
 
+# Preprocess image function
 def preprocess_image(uploaded_file, show_debug=False):
-display_img = Image.open(uploaded_file).convert("RGB")
-img = tf.keras.utils.img_to_array(display_img)
-img = tf.image.resize(img, (IMG_SIZE, IMG_SIZE))
-img = tf.cast(img, tf.float32)
+    display_img = Image.open(uploaded_file).convert("RGB")
+    img = tf.keras.utils.img_to_array(display_img)
+    img = tf.image.resize(img, (IMG_SIZE, IMG_SIZE))
+    img = tf.cast(img, tf.float32)
 
-```
-img_manual = (img / 127.5) - 1.0
-img_pre = preprocess_input(img)
-img_pre = tf.expand_dims(img_pre, 0)
+    # Manual scaling
+    img_manual = (img / 127.5) - 1.0
 
-if show_debug:
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown('<div class="debug-card">', unsafe_allow_html=True)
-        st.markdown("**BEFORE**")
-        st.write("min:", float(tf.reduce_min(img)))
-        st.write("max:", float(tf.reduce_max(img)))
-        st.markdown("</div>", unsafe_allow_html=True)
-    with c2:
-        st.markdown('<div class="debug-card">', unsafe_allow_html=True)
-        st.markdown("**AFTER preprocess_input**")
-        try:
-            st.write("min:", float(tf.reduce_min(img_pre)))
-            st.write("max:", float(tf.reduce_max(img_pre)))
-        except Exception:
-            st.write("min/max: (n/a)")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with c3:
-        st.markdown('<div class="debug-card">', unsafe_allow_html=True)
-        st.markdown("**MANUAL**")
-        st.write("min:", float(tf.reduce_min(img_manual)))
-        st.write("max:", float(tf.reduce_max(img_manual)))
-        st.markdown("</div>", unsafe_allow_html=True)
+    # preprocess_input scaling
+    img_pre = preprocess_input(img)
+    img_pre = tf.expand_dims(img_pre, 0)
 
-return img_pre, display_img
+    if show_debug:
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown('<div class="debug-card">', unsafe_allow_html=True)
+            st.markdown("**BEFORE**")
+            st.write("min:", float(tf.reduce_min(img)))
+            st.write("max:", float(tf.reduce_max(img)))
+            st.markdown("</div>", unsafe_allow_html=True)
+        with c2:
+            st.markdown('<div class="debug-card">', unsafe_allow_html=True)
+            st.markdown("**AFTER preprocess_input**")
+            try:
+                st.write("min:", float(tf.reduce_min(img_pre)))
+                st.write("max:", float(tf.reduce_max(img_pre)))
+            except Exception:
+                st.write("min/max: (n/a)")
+            st.markdown("</div>", unsafe_allow_html=True)
+        with c3:
+            st.markdown('<div class="debug-card">', unsafe_allow_html=True)
+            st.markdown("**MANUAL**")
+            st.write("min:", float(tf.reduce_min(img_manual)))
+            st.write("max:", float(tf.reduce_max(img_manual)))
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    return img_pre, display_img
+
 ```
 
 # Header
