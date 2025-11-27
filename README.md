@@ -44,3 +44,8 @@ Preprocessing: tf.keras.applications.efficientnet.preprocess_input
 ### Impact
 
 SlideLab AI empowers healthcare workers by providing rapid, accurate AI diagnostics, potentially improving early detection of malaria and NTDs, especially in regions with limited laboratory resources.
+
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
