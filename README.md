@@ -1,51 +1,149 @@
-### SlideLab AI — NTD Vision
+# SlideLab AI — NTD Vision
 
-Track: Health & Public Safety
-Team: 
-1. Adeniyi Micheal Oluwafemi, Fellow ID: FE/23/44017546
-2. Ifeanyi Hyacint Muotoe, Fellow ID: FE/25/9928453022
-3. Olutunde Stephen Anuoluwa, Fellow ID:FE/23/85039993
-   
-*Lead: Adeniyi Micheal Oluwafemi*
-Contact: oluwafemiadeniyi772@gmail.com
+**Track:** Health & Public Safety  
 
-### Overview
+SlideLab AI is an AI-powered microscopy tool that assists healthcare workers in detecting malaria from stained blood-smear images. The system uses a deep learning model to classify cells as **parasitized** or **uninfected**, aiming to support diagnosis in resource-limited settings.
 
-SlideLab **AI is an AI-powered microscopy platform** designed to assist healthcare providers in diagnosing malaria and other neglected tropical diseases (NTDs) through blood-smear image analysis. Built with EfficientNetB0 and advanced preprocessing, the system provides accurate predictions in real-time, helping bridge gaps in diagnostics, especially in resource-limited regions.
+---
 
-### Features
+## Team
 
-1. AI-assisted slide analysis: Upload a stained blood-smear image to get instant predictions.
-2. Classifies parasitized vs. uninfected cells (currently for malaria).
-3. Visual feedback: See uploaded cell images and predicted probabilities.
-4. Debug mode: Inspect preprocessing ranges for transparency and reproducibility.
-5. Scalable: Designed to include other NTDs such as filariasis and loiasis.
+- **Adeniyi Micheal Oluwafemi**  
+  Fellow ID: FE/23/44017546  
+  Role: Team Lead  
+  Contact: oluwafemiadeniyi772@gmail.com  
 
-### Dataset Description
-We used the publicly available malaria blood-smear image dataset from the Lister Hill National Center for Biomedical Communications (LHNCBC) at the U.S. National Library of Medicine. This dataset contains thin and thick blood-smear microscopy images from both infected and uninfected patients, with expert-annotated labels identifying parasitized and healthy red blood cells. The images are anonymized and collected under real clinical conditions, making them highly representative of what diagnostic labs encounter in malaria-endemic regions. By leveraging this dataset, SlideLab AI trained and evaluated AI models to accurately classify blood-smear images, distinguishing infected cells from healthy ones and enabling reliable AI-assisted malaria diagnostics.
+- **Ifeanyi Hyacint Muotoe**  
+  Fellow ID: FE/25/9928453022  
 
-### Model and Evaluation Metrics
+- **Olutunde Stephen Anuoluwa**  
+  Fellow ID: FE/23/85039993  
 
-Architecture: EfficientNetB0
+---
 
-Classes: parasitized, uninfected
+## Overview
 
-Input size: 180×180 pixels
+Malaria diagnosis in many regions still relies heavily on manual microscopy, which is time-consuming and depends on the skill and availability of trained personnel. SlideLab AI provides an AI-assisted second opinion by analysing digitised blood-smear images and returning a prediction in real time.
 
-Preprocessing: tf.keras.applications.efficientnet.preprocess_input
+The current version focuses on malaria, but the architecture is designed to be extended to other neglected tropical diseases (NTDs) in the future.
 
-<img width="400" height="300" alt="confusion_matrix" src="https://github.com/user-attachments/assets/a50c34f1-8181-40fa-9d4d-8d6fcfe9382f" />
+---
 
-<img width="400" height="300" alt="probabilities_histogram" src="https://github.com/user-attachments/assets/bd2988e1-5eea-4a5f-90f0-785e96ba66b8" />
+## Features
 
-<img width="400" height="300" alt="roc_curve" src="https://github.com/user-attachments/assets/3dd76a57-c748-478e-90b1-adc46832118c" />
+- **AI-assisted slide analysis**  
+  Upload a stained blood-smear image and receive an instant prediction.
 
+- **Binary malaria classification**  
+  Classifies images into two classes: **parasitized** and **uninfected**.
 
-### Impact
+- **Visual feedback**  
+  Displays the uploaded image together with the predicted class and probability.
 
-SlideLab AI empowers healthcare workers by providing rapid, accurate AI diagnostics, potentially improving early detection of malaria and NTDs, especially in regions with limited laboratory resources.
+- **Extensible design**  
+  The pipeline can be adapted to support additional NTDs such as filariasis and loiasis.
+
+---
+
+## Dataset
+
+The model is trained on a publicly available malaria blood-smear image dataset from the  
+**Lister Hill National Center for Biomedical Communications (LHNCBC)** at the  
+**U.S. National Library of Medicine**.
+
+- Thin and thick blood-smear microscopy images  
+- Expert-annotated labels for parasitized vs. uninfected cells  
+- Anonymised images collected under real clinical conditions  
+
+This dataset provides realistic examples of what diagnostic labs in malaria-endemic regions encounter.
+
+---
+
+## Model
+
+- **Architecture:** EfficientNetB0  
+- **Input size:** 180 × 180 pixels  
+- **Number of classes:** 2 (parasitized, uninfected)  
+- **Preprocessing:** `tf.keras.applications.efficientnet.preprocess_input`  
+
+During development, standard evaluation tools (confusion matrix, ROC curve, probability histograms) were used to assess performance and calibration.
+
+---
+
+## Project Structure
+
+Current repository layout:
+
+- `.gitattributes`  
+  Configuration for Git (including LFS for large files such as the model).
+
+- `Malaria_Cell_Classification_Model.h5`  
+  Trained malaria cell classification model.
+
+- `Malaria_Cell_Classification_Model_Notebook.ipynb`  
+  Jupyter notebook used for model training, experiments, and analysis.
+
+- `StreamlitWebApp.py`  
+  Main Streamlit application used for running the web interface and model inference.
+
+- `requirements.txt`  
+  Python dependencies required to run the project.
+
+- `README.md`  
+  Project documentation (this file).
+
+- `LICENSE`  
+  MIT license for this project.
+
+---
+
+## How to Run
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd <your-repo-folder>
+   ```
+
+2. **Create and activate a virtual environment (optional but recommended)**
+
+   ```bash
+   python -m venv venv
+   # Windows
+   venv\Scripts\activate
+   # macOS / Linux
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Start the Streamlit app**
+
+   ```bash
+   streamlit run StreamlitWebApp.py
+   ```
+
+5. **Use the app**
+
+   - Open the URL shown in the terminal (usually `http://localhost:8501`).
+   - Upload a stained blood-smear image.
+   - View the predicted class (parasitized or uninfected) and the associated probability.
+
+---
+
+## Limitations and Disclaimer
+
+- The current version is trained and evaluated on a specific public dataset and may not cover all slide preparation techniques or imaging conditions.
+- This tool is intended for **research and demonstration purposes only**.  
+  It is **not** a certified medical device and should not be used as a standalone basis for clinical decision-making.
+
+---
 
 ## License
 
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
-
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
