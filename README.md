@@ -2,6 +2,8 @@
 
 **Track:** Health & Public Safety  
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://slide-ai.streamlit.app/)
+
 SlideLab AI is an AI-powered microscopy tool that assists healthcare workers in detecting malaria from stained blood-smear images. The system uses a deep learning model to classify cells as **parasitized** or **uninfected**, aiming to support diagnosis in resource-limited settings.
 
 ---
