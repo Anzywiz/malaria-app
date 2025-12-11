@@ -53,7 +53,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Constants & Model path
-MODEL_PATH = "Malaria_Cell_Classification_Model.h5"
+MODEL_PATH = "model.h5"
 CLASS_NAMES = ["parasitized", "uninfected"]
 
 # Sidebar - Streamlined
